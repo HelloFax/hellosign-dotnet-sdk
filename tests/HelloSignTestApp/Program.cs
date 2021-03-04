@@ -356,6 +356,21 @@ namespace HelloSignTestApp
             // Get the new API app again (just for demonstration purposes)
             var apiApp = client.GetApiApp(aResponse.ClientId);
             var clientId = apiApp.ClientId;
+                        
+            //Update Primary Button Color on existing app
+            var updatedApiApp = client.UpdateApiApp(clientId, new WhiteLabel () { PrimaryButtonColor = "#00b3e6"});
+            Console.WriteLine($"Now my {updatedApiApp.Name} has Design Components. Only available with HelloSign");
+
+            try
+            {
+                //Update Primary Button Color on existing app to an invalid Contrast
+                client.UpdateApiApp(clientId, new WhiteLabel () { TextColor2 = "#323A3F"});
+            }
+            catch(BadRequestException ex)
+            { 
+                //[{"error_type":"invalid_contrast_ratio","element_name":"text_color2 and header_background_color"}]
+                Console.WriteLine($"Not Allowed {ex.Message}");
+            }
 
             // Create embedded signature request
             var eRequest = new SignatureRequest();

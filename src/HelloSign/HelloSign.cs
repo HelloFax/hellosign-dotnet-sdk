@@ -1487,6 +1487,27 @@ namespace HelloSign
         }
         
         /// <summary>
+        /// Updates an existing API App's white_labeling_options.
+        /// </summary>
+        /// <param name="clientId">The app's client ID.</param>
+        /// <param name="whiteLabel">The app's client ID.</param>
+        /// <returns>The new API App (given back by the server)</returns>
+        public ApiApp UpdateApiApp(string clientId, WhiteLabel whiteLabel)
+        {
+            RequireAuthentication();
+            
+            var request = new RestRequest("api_app/{id}", Method.POST);
+            request.AddUrlSegment("id", clientId);
+
+            // Add simple parameters
+            var whiteLabelingOptions = JsonConvert.SerializeObject(whiteLabel);
+            request.AddParameter("white_labeling_options", whiteLabelingOptions);
+
+            request.RootElement = "api_app";
+            return Execute<ApiApp>(request);
+        }
+        
+        /// <summary>
         /// Delete an API App.
         /// </summary>
         /// <param name="clientId">The app's client ID.</param>
